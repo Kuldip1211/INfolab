@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISRO Spacecraft Search</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-4">ISRO Spacecraft Search</h1>
+        <div class="form-group">
+            <label for="spacecraftName">Enter Spacecraft Name:</label>
+            <input type="text" class="form-control" id="spacecraftName" placeholder="Enter spacecraft name">
+        </div>
+        <button id="searchButton" class="btn btn-primary">Search</button>
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let spacecrafts = [];
+
+            // Fetch spacecraft data from the API
+            $.getJSON('https://isro.vercel.app/api/spacecrafts', function(data) {
+                spacecrafts = data.spacecrafts;
+            });
+
+            $('#searchButton').on('click', function() {
+                let spacecraftName = $('#spacecraftName').val().trim();
+                let found = spacecrafts.some(spacecraft => spacecraft.name.toLowerCase() === spacecraftName.toLowerCase());
+
+                if (found) {
+                    $('#result').html(`<div class="alert alert-success">Spacecraft "${spacecraftName}" found!</div>`);
+                } else {
+                    $('#result').html(`<div class="alert alert-danger">Spacecraft "${spacecraftName}" not found!</div>`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

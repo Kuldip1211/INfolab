@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universities in India</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .table-container {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container table-container">
+        <h1 class="text-center">Universities in India</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>SR NO</th>
+                    <th>UNIVERSITY NAME</th>
+                    <th>STATE-PROVINCE</th>
+                    <th>WEBSITE LINK</th>
+                </tr>
+            </thead>
+            <tbody id="university-table-body">
+                <!-- Data will be appended here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.getJSON('http://universities.hipolabs.com/search?country=india', function(data) {
+                let tableBody = $('#university-table-body');
+                $.each(data, function(index, university) {
+                    let row = `<tr>
+                        <td>${index + 1}</td>
+                        <td>${university.name}</td>
+                        <td>${university['state-province'] ? university['state-province'] : 'N/A'}</td>
+                        <td><a href="${university.web_pages[0]}" target="_blank">${university.web_pages[0]}</a></td>
+                    </tr>`;
+                    tableBody.append(row);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

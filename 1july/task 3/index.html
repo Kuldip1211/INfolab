@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 India Data</title>
+</head>
+<body>
+    <div>
+        <h1>COVID-19 India Data</h1>
+        <table border="1" id="covidTable">
+            <thead>
+                <tr>
+                    <th>SR NO</th>
+                    <th>STATE NAME</th>
+                    <th>CONFIRMED CASES</th>
+                    <th>RECOVERED CASES</th>
+                    <th>DEATH CASES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiUrl = 'https://data.covid19india.org/data.json';
+            const tableBody = document.querySelector('#covidTable tbody');
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const statewise = data.statewise;
+                    statewise.forEach((state, index) => {
+                        if (index === 0) return; // Skip the first entry as it's the total for India
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${index}</td>
+                            <td>${state.state}</td>
+                            <td>${state.confirmed}</td>
+                            <td>${state.recovered}</td>
+                            <td>${state.deaths}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+</body>
+</html>

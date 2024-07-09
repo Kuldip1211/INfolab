@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutual Fund Scheme Finder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Mutual Fund Scheme Finder</h1>
+        <form id="schemeForm">
+            <label for="schemeCode">Enter Scheme Code:</label>
+            <input type="text" id="schemeCode" name="schemeCode" required><br><br>
+            <button type="submit">Submit</button>
+        </form>
+
+        <h2>Scheme Details</h2>
+        <p id="schemeName"></p>
+    </div>
+
+    <script>
+        document.getElementById('schemeForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+
+            const schemeCode = document.getElementById('schemeCode').value;
+            const apiUrl = `https://api.mfapi.in/mf/${schemeCode}`;
+            const schemeNameElement = document.getElementById('schemeName');
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Scheme not found');
+                    }
+                })
+                .then(data => {
+                    if (data.meta && data.meta.scheme_name) {
+                        schemeNameElement.textContent = `Scheme Name: ${data.meta.scheme_name}`;
+                    } else {
+                        schemeNameElement.textContent = 'Scheme not found';
+                    }
+                })
+                .catch(error => {
+                    schemeNameElement.textContent = 'Scheme not found';
+                    console.error('Error fetching data:', error);
+                });
+        });
+    </script>
+</body>
+</html>
